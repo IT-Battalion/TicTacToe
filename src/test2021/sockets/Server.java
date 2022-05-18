@@ -28,13 +28,17 @@ public class Server {
 
     public static void main(String[] args) {
         try (
-                ServerSocket ss = new ServerSocket(5000);
+                ServerSocket ss = new ServerSocket(4999);
         ) {
+            System.out.println("Starting Server...");
             Server server = new Server(ss);
             while (!server.getServerSocket().isClosed()) {
                 Socket socket = server.getServerSocket().accept();
+                System.out.println("Accepting new Client!");
                 executorService.execute(new ClientHandler(socket));
             }
+            System.out.println("Shutting down Server.");
+            server.shutdown();
             executorService.shutdown();
         } catch (IOException e) {
             throw new RuntimeException(e);
